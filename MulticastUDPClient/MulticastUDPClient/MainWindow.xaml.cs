@@ -23,6 +23,7 @@ namespace MulticastUDPClient
     public partial class MainWindow : Window
     {
         UDPClient udpClientWrapper;
+        UserClient userClient;
         int i = 1;
 
         public MainWindow()
@@ -42,14 +43,15 @@ namespace MulticastUDPClient
             udpClientWrapper.UdpMessageReceived += OnUdpMessageReceived;
 
             AddToLog("UDP Client started");
+            AddToLog($"Client {userNameClient.Text} enter");
         }
 
         private void BtnSend_Click(object sender, RoutedEventArgs e)
         {
             // Generate some message bytes
-            string msgString = String.Format("Message from {0} pid {1} #{2}",
+            string msgString = String.Format("Message from {0} Client {1} #{2}",
                 GetLocalIPAddress(),
-                System.Diagnostics.Process.GetCurrentProcess().Id,
+                userNameClient.Text,
                 i.ToString());
             i++;
             byte[] buffer = Encoding.Unicode.GetBytes(msgString);
@@ -85,6 +87,11 @@ namespace MulticastUDPClient
                 }
             }
             throw new Exception("Local IP Address Not Found!");
+        }
+
+        private void BtnClose_Click(object sender, RoutedEventArgs e)
+        {
+            Application.Current.Shutdown();
         }
     }
 }
